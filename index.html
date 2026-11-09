@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<title>Keenious — инвестиционный тизер</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1b2430; --muted:#5b6675; --navy:#14213d; --navy-2:#1d2d52;
+    --accent:#2a7de1; --accent-2:#9cc6ff; --accent-soft:#e8f1fc;
+    --warn:#b4530b; --warn-soft:#fdf1e6; --ok:#1f8a5b;
+    --rule:#d9dee5; --bg:#f4f6f9; --card:#fff; --radius:12px;
+    --wrap:1120px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:var(--ink);background:#fff;line-height:1.55;font-size:16px;-webkit-font-smoothing:antialiased}
+  a{color:var(--accent)}
+  .wrap{max-width:var(--wrap);margin:0 auto;padding:0 24px}
+  sup.r{font-size:.62em;color:var(--accent);font-weight:600;margin-left:1px}
+  sup.r a{text-decoration:none}
+  .tag{display:inline-block;font-size:.72em;font-weight:700;color:var(--warn);background:var(--warn-soft);border-radius:6px;padding:1px 7px;vertical-align:middle;letter-spacing:.02em}
+  b,strong{color:var(--navy);font-weight:700}
+
+  /* ---------- password gate ---------- */
+  #gate{min-height:100vh;display:grid;place-items:center;background:radial-gradient(1200px 600px at 20% -10%,#2a4a8a 0,transparent 60%),var(--navy);padding:24px}
+  .gate-card{width:100%;max-width:420px;background:#fff;border-radius:16px;padding:32px 28px;box-shadow:0 20px 60px rgba(0,0,0,.35)}
+  .gate-brand{font-weight:800;letter-spacing:.08em;color:var(--navy);font-size:22px}
+  .gate-card h1{font-size:18px;margin:14px 0 6px;color:var(--ink)}
+  .gate-card p{color:var(--muted);font-size:14px}
+  .gate-card form{margin-top:18px;display:grid;gap:10px}
+  .field{display:flex;border:1.5px solid var(--rule);border-radius:10px;overflow:hidden;transition:border-color .15s}
+  .field:focus-within{border-color:var(--accent)}
+  .field input{flex:1;border:0;padding:12px 14px;font:inherit;font-size:16px;outline:none;min-width:0}
+  .field button{border:0;background:none;padding:0 12px;color:var(--muted);cursor:pointer;font:inherit;font-size:13px}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:10px;padding:12px 20px;font:inherit;font-weight:700;cursor:pointer;text-decoration:none;transition:transform .08s,background .15s}
+  .btn:active{transform:translateY(1px)}
+  .btn-primary{background:var(--accent);color:#fff}
+  .btn-primary:hover{background:#1f6cc8}
+  .btn-ghost{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.25)}
+  .btn-ghost:hover{background:rgba(255,255,255,.18)}
+  .gate-err{min-height:20px;color:#c0392b;font-size:13px}
+  .gate-note{margin-top:18px;padding-top:14px;border-top:1px solid var(--rule);font-size:12px;color:var(--muted)}
+  .shake{animation:shake .35s}
+  @keyframes shake{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+
+  /* ---------- header / nav ---------- */
+  #app[hidden]{display:none}
+  .topbar{position:sticky;top:0;z-index:20;background:rgba(20,33,61,.96);backdrop-filter:saturate(1.2) blur(6px);border-bottom:1px solid rgba(255,255,255,.08)}
+  .topbar .wrap{display:flex;align-items:center;gap:20px;height:58px}
+  .logo{font-weight:800;letter-spacing:.08em;color:#fff;text-decoration:none;font-size:18px}
+  .nav{display:flex;gap:4px;margin-left:auto;overflow-x:auto;scrollbar-width:none}
+  .nav::-webkit-scrollbar{display:none}
+  .nav a{color:#c9d4e5;text-decoration:none;font-size:14px;padding:6px 10px;border-radius:8px;white-space:nowrap}
+  .nav a:hover{background:rgba(255,255,255,.08);color:#fff}
+  .topbar .btn{padding:8px 14px;font-size:14px;white-space:nowrap}
+
+  .hero{background:radial-gradient(900px 500px at 85% -20%,#2a4a8a 0,transparent 60%),var(--navy);color:#fff;padding:72px 0 56px}
+  .eyebrow{display:inline-block;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-2);background:rgba(156,198,255,.1);border:1px solid rgba(156,198,255,.25);padding:4px 10px;border-radius:999px}
+  .hero h1{font-size:clamp(30px,4.6vw,52px);line-height:1.08;margin:18px 0 14px;letter-spacing:-.01em;max-width:860px}
+  .hero h1 span{color:var(--accent-2)}
+  .hero .lead{font-size:clamp(16px,1.6vw,19px);color:#d6deea;max-width:760px}
+  .hero .actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
+  .hero .slogan{margin-top:26px;color:#9fb0c8;font-size:14px}
+  .hero .slogan b{color:#fff}
+
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:-34px;position:relative;z-index:2}
+  .kpi{background:var(--card);border:1px solid var(--rule);border-left:4px solid var(--accent);border-radius:var(--radius);padding:16px 18px;box-shadow:0 8px 24px rgba(20,33,61,.08)}
+  .kpi .v{font-size:28px;font-weight:800;color:var(--navy);line-height:1.1}
+  .kpi .v small{font-size:15px;font-weight:700}
+  .kpi .c{font-size:13px;color:var(--muted);margin-top:6px;line-height:1.4}
+
+  /* ---------- sections ---------- */
+  section.blk{padding:64px 0;scroll-margin-top:60px}
+  section.alt{background:var(--bg)}
+  .sec-head{max-width:820px;margin-bottom:28px}
+  .kicker{font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+  .sec-head h2{font-size:clamp(24px,3vw,34px);line-height:1.18;margin-top:8px;color:var(--navy);letter-spacing:-.01em}
+  .sec-head p{color:var(--muted);margin-top:10px;font-size:17px}
+  .grid{display:grid;gap:18px}
+  .g2{grid-template-columns:repeat(2,1fr)} .g3{grid-template-columns:repeat(3,1fr)}
+  .card{background:var(--card);border:1px solid var(--rule);border-radius:var(--radius);padding:22px}
+  .card h3{font-size:17px;color:var(--navy);margin-bottom:8px}
+  .card p,.card li{font-size:15px}
+  .card p+p{margin-top:8px}
+  .num{font-size:40px;font-weight:800;color:var(--navy);line-height:1}
+  .num.warn{color:var(--warn)}
+  .muted{color:var(--muted)}
+  ul.clean{list-style:none;display:grid;gap:10px}
+  ul.clean li{padding-left:22px;position:relative}
+  ul.clean li::before{content:"";position:absolute;left:0;top:.6em;width:10px;height:10px;border-radius:3px;background:var(--accent)}
+  .flow{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:12px;align-items:stretch}
+  .flow .arrow{align-self:center;color:var(--accent);font-size:26px;font-weight:800}
+  .flow .card{border-top:4px solid var(--accent)}
+  .flow .card.p{border-top-color:var(--warn)}
+  .flow .card.m{border-top-color:var(--ok)}
+
+  /* market */
+  .market{display:grid;grid-template-columns:340px 1fr;gap:28px;align-items:center}
+  .market svg{width:100%;height:auto;max-width:340px}
+  .mrow{display:grid;grid-template-columns:120px 1fr;gap:12px;padding:14px 0;border-bottom:1px solid var(--rule)}
+  .mrow:last-child{border-bottom:0}
+  .mrow .k{font-weight:800;color:var(--navy);font-size:15px}
+  .mrow .k span{display:block;font-size:22px}
+
+  /* table */
+  .tbl{width:100%;border-collapse:collapse;font-size:15px;background:#fff;border:1px solid var(--rule);border-radius:var(--radius);overflow:hidden}
+  .tbl th,.tbl td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--rule);vertical-align:top}
+  .tbl th{background:#eef2f7;color:var(--navy);font-size:13px;text-transform:uppercase;letter-spacing:.04em}
+  .tbl tr:last-child td{border-bottom:0}
+  .tbl .hl td{background:var(--accent-soft)}
+  .tbl-wrap{overflow-x:auto;border-radius:var(--radius)}
+
+  /* synergy */
+  .step-n{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;font-weight:800;font-size:14px;margin-bottom:10px}
+  .gains{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px}
+  .gain{background:var(--accent-soft);border-radius:var(--radius);padding:16px 18px;font-size:15px}
+  .gain b{display:block;margin-bottom:4px}
+  .callout{margin-top:18px;background:var(--navy);color:#dbe4f1;border-radius:var(--radius);padding:20px 22px;font-size:15px}
+  .callout b{color:#fff}
+
+  /* round */
+  .round{display:grid;grid-template-columns:1.1fr 1fr;gap:18px}
+  .terms{background:var(--navy);color:#e6ecf5;border-radius:var(--radius);padding:24px}
+  .terms .big{font-size:42px;font-weight:800;color:#fff;line-height:1}
+  .terms dl{display:grid;grid-template-columns:auto 1fr;gap:10px 16px;margin-top:18px;font-size:15px}
+  .terms dt{color:#9fb0c8}
+  .terms dd{color:#fff;font-weight:600}
+  .bar{display:flex;height:34px;border-radius:8px;overflow:hidden;margin:14px 0 16px}
+  .bar div{display:grid;place-items:center;color:#fff;font-weight:700;font-size:13px}
+  .legend{display:grid;gap:8px;font-size:14px}
+  .legend div{display:flex;gap:10px;align-items:flex-start}
+  .legend i{flex:none;width:12px;height:12px;border-radius:3px;margin-top:5px}
+
+  /* risks */
+  .scheme{counter-reset:s;display:grid;gap:12px}
+  .scheme li{list-style:none;counter-increment:s;background:#fff;border:1px solid var(--rule);border-radius:var(--radius);padding:16px 18px 16px 60px;position:relative;font-size:15px}
+  .scheme li::before{content:counter(s);position:absolute;left:16px;top:14px;width:30px;height:30px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font-weight:800;display:grid;place-items:center}
+  .scheme li b{display:block;margin-bottom:2px}
+  .risk-other{margin-top:22px}
+  .mit{color:var(--ok);font-weight:700}
+
+  /* team */
+  .team{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+  .person{background:#fff;border:1px solid var(--rule);border-radius:var(--radius);padding:18px}
+  .ava{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--navy));color:#fff;display:grid;place-items:center;font-weight:800;margin-bottom:10px}
+  .person b{display:block;font-size:15px}
+  .person span{font-size:13px;color:var(--muted)}
+
+  /* CTA + footer */
+  .cta{background:var(--navy);color:#fff;padding:56px 0;text-align:center}
+  .cta h2{font-size:clamp(24px,3vw,32px)}
+  .cta p{color:#c9d4e5;margin:10px auto 22px;max-width:640px}
+  details.src{margin-top:8px}
+  details.src summary{cursor:pointer;font-weight:700;color:var(--navy);padding:10px 0}
+  .srclist{columns:3 260px;column-gap:28px;font-size:13px;color:var(--muted);margin-top:6px}
+  .srclist div{break-inside:avoid;margin-bottom:5px}
+  .srclist a{color:var(--muted)}
+  .srclist .n{color:var(--accent);font-weight:700}
+  footer.foot{padding:28px 0 40px;font-size:13px;color:var(--muted);border-top:1px solid var(--rule)}
+
+  /* modal */
+  .modal{position:fixed;inset:0;background:rgba(10,18,35,.6);display:grid;place-items:center;padding:20px;z-index:50}
+  .modal[hidden]{display:none}
+  .modal .box{background:#fff;border-radius:16px;max-width:480px;width:100%;padding:26px;max-height:92vh;overflow:auto}
+  .modal h3{color:var(--navy);font-size:20px}
+  .modal form{display:grid;gap:12px;margin-top:16px}
+  .modal label{font-size:13px;font-weight:600;color:var(--muted);display:grid;gap:5px}
+  .modal input,.modal textarea,.modal select{font:inherit;font-size:15px;padding:10px 12px;border:1.5px solid var(--rule);border-radius:10px;outline:none;width:100%}
+  .modal input:focus,.modal textarea:focus,.modal select:focus{border-color:var(--accent)}
+  .modal .row{display:flex;gap:10px;justify-content:flex-end;margin-top:4px}
+  .btn-light{background:#eef2f7;color:var(--navy)}
+  .done{background:var(--accent-soft);border-radius:10px;padding:14px;font-size:14px;margin-top:14px}
+
+  /* ---------- responsive ---------- */
+  @media (max-width:980px){
+    .kpis{grid-template-columns:repeat(2,1fr)}
+    .g3,.gains{grid-template-columns:1fr 1fr}
+    .market,.round{grid-template-columns:1fr}
+    .market svg{margin:0 auto;display:block}
+    .team{grid-template-columns:repeat(3,1fr)}
+    .flow{grid-template-columns:1fr}
+    .flow .arrow{transform:rotate(90deg);justify-self:center}
+    .nav{display:none}
+  }
+  @media (max-width:620px){
+    body{font-size:15px}
+    .wrap{padding:0 16px}
+    .hero{padding:48px 0 52px}
+    .kpis{grid-template-columns:1fr 1fr;gap:10px}
+    .kpi{padding:12px 14px}.kpi .v{font-size:22px}
+    .g2,.g3,.gains{grid-template-columns:1fr}
+    .team{grid-template-columns:1fr 1fr}
+    section.blk{padding:44px 0}
+    .mrow{grid-template-columns:1fr}
+    .terms dl{grid-template-columns:1fr}
+    .terms dt{margin-top:6px}
+    .topbar .btn{display:none}
+  }
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.shake{animation:none}}
+</style>
+</head>
+<body>
+
+<!-- ================= PASSWORD GATE ================= -->
+<div id="gate" role="dialog" aria-labelledby="gate-title">
+  <div class="gate-card" id="gate-card">
+    <div class="gate-brand">KEENIOUS</div>
+    <h1 id="gate-title">Инвестиционный тизер · доступ по паролю</h1>
+    <p>Материалы конфиденциальны. Введите пароль, который вы получили вместе с приглашением.</p>
+    <form id="gate-form" autocomplete="off">
+      <div class="field">
+        <input id="pw" type="password" placeholder="Пароль" aria-label="Пароль" required autofocus>
+        <button type="button" id="toggle" aria-label="Показать пароль">показать</button>
+      </div>
+      <div class="gate-err" id="gate-err" role="alert"></div>
+      <button class="btn btn-primary" type="submit" id="gate-btn">Открыть материалы</button>
+    </form>
+    <div class="gate-note">Учебный проект по курсу инвестиционного анализа. Не является документом Keenious AS или АО «Антиплагиат».</div>
+  </div>
+</div>
+
+<!-- ================= CONTENT ================= -->
+<div id="app" hidden>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="logo" href="#top">KEENIOUS</a>
+    <nav class="nav" aria-label="Разделы">
+      <a href="#problem">Проблема</a><a href="#market">Рынок</a><a href="#competition">Конкуренты</a>
+      <a href="#synergy">Синергия</a><a href="#round">Раунд</a><a href="#risks">Риски</a><a href="#team">Команда</a>
+    </nav>
+    <button class="btn btn-primary js-request">Запросить материалы</button>
+  </div>
+</header>
+
+<section class="hero" id="top">
+  <div class="wrap">
+    <span class="eyebrow">Стратегический раунд · $3 млн</span>
+    <h1>Займите свободную нишу этичного поиска литературы для <span>4,66 млн</span> российских студентов</h1>
+    <p class="lead">Keenious — ИИ-ассистент, который по черновику студента находит научные статьи и ничего не пишет за автора. Мы ищем стратегического инвестора, чтобы встроить его в экосистему Антиплагиата.</p>
+    <div class="actions">
+      <button class="btn btn-primary js-request">Запросить материалы</button>
+      <a class="btn btn-ghost" href="#round">Параметры раунда ↓</a>
+    </div>
+    <p class="slogan"><b>Ваш текст — лучший поисковый запрос.</b> Keenious AS (Норвегия) · ноябрь 2026 · конфиденциально</p>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="kpis">
+    <div class="kpi"><div class="v">174 <small>млн</small></div><div class="c">публикаций в индексе<sup class="r"><a href="#s1">1</a></sup></div></div>
+    <div class="kpi"><div class="v">2,04 <small>млн NOK</small></div><div class="c">выручка в 2024 г. (≈ $0,2 млн)<sup class="r"><a href="#s2">2</a></sup></div></div>
+    <div class="kpi"><div class="v">$3,24 <small>млн</small></div><div class="c">привлечено за 5 раундов; последний — seed $1,41 млн, июнь 2024<sup class="r"><a href="#s3">3</a></sup></div></div>
+    <div class="kpi"><div class="v" style="font-size:22px">Caltech · CMU</div><div class="c">вузы-клиенты, также Ун-т Осло, Стокгольмский ун-т и др.<sup class="r"><a href="#s1">1</a></sup></div></div>
+  </div>
+</div>
+
+<!-- Problem → Solution → Market entry -->
+<section class="blk" id="problem">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">Проблема → решение → рынок</div>
+      <h2>Студенты отдают ИИ и поиск источников, и сам текст</h2>
+      <p>Вузы видят последствия на проверке, но инструмента, который учит самостоятельному поиску литературы, у них нет.</p>
+    </div>
+    <div class="grid g3" style="margin-bottom:22px">
+      <div class="card"><div class="num warn">36,1%</div><p class="muted" style="margin-top:8px">студенческих работ с признаками генеративного ИИ во II кв. 2026 г. (годом ранее — 22%)<sup class="r"><a href="#s17">17</a></sup></p></div>
+      <div class="card"><div class="num warn">×4</div><p class="muted" style="margin-top:8px">рост доли работ с признаками ИИ: 24% за 9 месяцев 2025 г. против 2023 г.<sup class="r"><a href="#s5">5</a></sup></p></div>
+      <div class="card"><div class="num warn">43%</div><p class="muted" style="margin-top:8px">студентов признаются, что пишут эссе, курсовые и дипломы с помощью нейросетей<sup class="r"><a href="#s27">27</a></sup></p></div>
+    </div>
+    <div class="flow">
+      <div class="card p">
+        <h3>Проблема</h3>
+        <p>Массовые студенческие ИИ-сервисы сами подбирают источники и пишут работу<sup class="r"><a href="#s24">24</a>,<a href="#s25">25</a></sup> — студент не учится искать и читать научную литературу. Проверка ВКР обязательна<sup class="r"><a href="#s22">22</a></sup>, но она выявляет проблему, а не решает её.</p>
+      </div>
+      <div class="arrow" aria-hidden="true">→</div>
+      <div class="card">
+        <h3>Решение: Keenious возвращает поиск студенту</h3>
+        <p>Студент пишет текст сам, а алгоритм Keenious по смыслу черновика рекомендует статьи и темы, строит карту исследовательских областей, объясняет термины и методы, переводит неанглоязычные работы<sup class="r"><a href="#s1">1</a></sup>.</p>
+        <p>Выбирает, читает и цитирует источники сам студент: Keenious не пишет эссе, абзацы и планы<sup class="r"><a href="#s1">1</a></sup> и не хранит присланный текст<sup class="r"><a href="#s6">6</a></sup>.</p>
+      </div>
+      <div class="arrow" aria-hidden="true">→</div>
+      <div class="card m">
+        <h3>Выход на рынок России</h3>
+        <p>В связке с Антиплагиатом проверка выявляет проблему, а Keenious даёт способ её исправить — через настоящие источники по теме работы.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="blk alt" id="why">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">Почему Россия и почему сейчас</div>
+      <h2>Спрос есть, ниша свободна, канал готов</h2>
+    </div>
+    <div class="grid g2">
+      <div class="card"><h3>Спрос</h3><p>4,66 млн студентов<sup class="r"><a href="#s11">11</a></sup> и быстро растущая доля ИИ-генерации в работах.</p></div>
+      <div class="card"><h3>Свободная ниша</h3><p>Специализированного сервиса подбора литературы по тексту работы без генерации в России нет (см. <a href="#competition">«Конкуренты»</a>).</p></div>
+      <div class="card"><h3>Готовый канал</h3><p>Антиплагиат уже встроен в учебный процесс — <b>2,73 млн</b> студенческих работ только за II квартал 2026 г.<sup class="r"><a href="#s29">29</a></sup></p></div>
+      <div class="card"><h3>Рычаг роста для Keenious</h3><p>На англоязычном рынке его теснят игроки с крупными раундами — Elicit ($22 млн, оценка $100 млн)<sup class="r"><a href="#s13">13</a></sup>, Consensus ($30 млн, май 2026 г.)<sup class="r"><a href="#s14">14</a></sup> — при собственной выручке ≈ $0,2 млн<sup class="r"><a href="#s2">2</a></sup>. Самостоятельно войти в Россию нельзя (152-ФЗ, санкции, платежи) — только через Антиплагиат.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- Market -->
+<section class="blk" id="market">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">Рынок</div>
+      <h2>TAM ≈ $270 млн · SAM ≈ $42 млн · SOM ≈ $2,3 млн ARR</h2>
+      <p>Расчёт снизу вверх; цена ≈ $1 за студента в год — <span class="tag">допущение</span>, близкое к вводному тарифу $2 500 + $0,70 за FTE для вузов до 2 500 FTE<sup class="r"><a href="#s7">7</a></sup>.</p>
+    </div>
+    <div class="market">
+      <svg viewBox="0 0 340 340" role="img" aria-label="Схема TAM, SAM, SOM">
+        <circle cx="170" cy="170" r="165" fill="#e8f1fc" stroke="#2a7de1" stroke-width="1.5"/>
+        <circle cx="170" cy="222" r="108" fill="#bfd8f7" stroke="#2a7de1" stroke-width="1.5"/>
+        <circle cx="170" cy="275" r="52" fill="#14213d"/>
+        <text x="170" y="52" text-anchor="middle" font-size="15" font-weight="800" fill="#14213d">TAM ≈ $270 млн</text>
+        <text x="170" y="150" text-anchor="middle" font-size="15" font-weight="800" fill="#14213d">SAM ≈ $42 млн</text>
+        <text x="170" y="272" text-anchor="middle" font-size="13" font-weight="800" fill="#fff">SOM</text>
+        <text x="170" y="290" text-anchor="middle" font-size="12" font-weight="600" fill="#9cc6ff">≈ $2,3 млн</text>
+      </svg>
+      <div>
+        <div class="mrow"><div class="k"><span>TAM</span>≈ $270 млн/год</div><div>269 млн студентов в мире<sup class="r"><a href="#s8">8</a></sup> × $1.</div></div>
+        <div class="mrow"><div class="k"><span>SAM</span>≈ $42 млн/год</div><div>США 19,4 млн<sup class="r"><a href="#s9">9</a></sup> + ЕС ≈ 18 млн<sup class="r"><a href="#s10">10</a></sup> + Россия 4,66 млн<sup class="r"><a href="#s11">11</a></sup> — рынки, где Keenious уже продаёт или где откроется канал Антиплагиата.</div></div>
+        <div class="mrow"><div class="k"><span>SOM</span>≈ $2,3 млн ARR</div><div>к 2029 г. <span class="tag">допущение</span>: 3% студентов США и ЕС (≈ 1,1 млн) + 25% студентов России через Антиплагиат (≈ 1,2 млн).</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Product -->
+<section class="blk alt" id="product">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">Продукт и бизнес-модель</div>
+      <h2>B2B2C: лицензия на кампус + подписки</h2>
+    </div>
+    <div class="grid g3">
+      <div class="card"><h3>Вузы</h3><p>Основной доход — годовая лицензия на кампус, цена по числу FTE<sup class="r"><a href="#s4">4</a></sup>. SSO, доступ по IP, связка с библиотечным фондом<sup class="r"><a href="#s12">12</a></sup>.</p></div>
+      <div class="card"><h3>Частные пользователи</h3><p>Free, Plus $10/мес., Teams $20/пользователь/мес. (оплата за год)<sup class="r"><a href="#s12">12</a></sup>.</p></div>
+      <div class="card"><h3>Где работает</h3><p>Браузер, дополнения для Word и Google Docs; карта исследовательских областей, объяснение терминов, перевод работ<sup class="r"><a href="#s1">1</a></sup>.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- Competition -->
+<section class="blk" id="competition">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">Тракшн и конкуренты</div>
+      <h2>В России весомого специализированного конкурента нет</h2>
+      <p>Продукт используют ведущие университеты США и Северной Европы<sup class="r"><a href="#s1">1</a></sup>; число пользователей и динамику выручки компания не раскрывает.</p>
+    </div>
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr><th>Игрок</th><th>Что делает</th><th>Отличие от Keenious</th></tr></thead>
+        <tbody>
+          <tr class="hl"><td><b>Keenious</b></td><td>Подбор литературы по тексту автора прямо в редакторе</td><td>Без генерации текста</td></tr>
+          <tr><td>Elicit<sup class="r"><a href="#s13">13</a></sup>, Consensus<sup class="r"><a href="#s14">14</a></sup>, Litmaps + ResearchRabbit<sup class="r"><a href="#s15">15</a></sup></td><td>Мировые ИИ-инструменты для поиска и анализа литературы</td><td>Крупные раунды, фокус на англоязычных рынках</td></tr>
+          <tr><td>eLibrary и аналогичные базы<sup class="r"><a href="#s23">23</a></sup></td><td>Поиск по ключевым словам и метаданным</td><td>Нет поиска по смыслу текста работы</td></tr>
+          <tr><td>Кэмп, StudyAI<sup class="r"><a href="#s24">24</a>,<a href="#s25">25</a></sup></td><td>Массовые студенческие ИИ-сервисы с автоподбором источников</td><td>Пишут работы — модель, противоположная позиции Антиплагиата</td></tr>
+          <tr><td>Руконтекст<sup class="r"><a href="#s16">16</a></sup></td><td>Проверка библиографии и ИИ-помощник по оформлению</td><td>Не подбирает литературу по тексту</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="margin-top:16px"><b>Ниша этичного подбора литературы по тексту работы свободна</b> — её можно занять первым через канал Антиплагиата.</p>
+  </div>
+</section>
+
+<!-- Synergy -->
+<section class="blk alt" id="synergy">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">Синергия с Антиплагиатом</div>
+      <h2>Проверка выявляет проблему — Keenious даёт способ её исправить</h2>
+    </div>
+    <div class="grid g3">
+      <div class="card"><div class="step-n">1</div><h3>«Источники к работе» в отчёте Антиплагиат.ВУЗ</h3><p>После проверки система предлагает статьи по теме работы.</p></div>
+      <div class="card"><div class="step-n">2</div><h3>Панель в веб-редакторе «Антиплагиат 2.0»</h3><p>Весенний пилот 2026 г.: 28 вузов, 2 400 студентов, 750 преподавателей; доступ вузам — к зимней сессии<sup class="r"><a href="#s17">17</a></sup>. Встроенный ИИ-помощник помогает с планом, структурой и стилем, преподаватель видит, по каким источникам писал студент<sup class="r"><a href="#s17">17</a></sup>; Keenious добавит подбор литературы по тексту работы.</p></div>
+      <div class="card"><div class="step-n">3</div><h3>Для преподавателей и журналов</h3><p>Подсказка ключевых работ, которых нет в списке литературы.</p></div>
+    </div>
+    <div class="gains">
+      <div class="gain"><b>Пользователи</b>Находят первоисточники и читают их сами.</div>
+      <div class="gain"><b>Антиплагиат</b>Переход от «контроля» к «поддержке автора», новый модуль для допродажи вузам, ответ конкурентам.</div>
+      <div class="gain"><b>Keenious</b>Выход к 4,66 млн российских студентов и русскоязычным данным.</div>
+    </div>
+    <div class="callout"><b>Почему не собственная разработка.</b> Keenious даёт готовый индекс на 174 млн публикаций<sup class="r"><a href="#s1">1</a></sup>, рекомендательный движок, который развивается с 2017 г.<sup class="r"><a href="#s2">2</a></sup>, и спрос, подтверждённый ведущими вузами мира — Caltech, Carnegie Mellon и др.<sup class="r"><a href="#s1">1</a></sup> Это сокращает путь к запуску модуля по сравнению с разработкой с нуля.</div>
+  </div>
+</section>
+
+<!-- Round -->
+<section class="blk" id="round">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">Параметры раунда</div>
+      <h2>$3 млн на выход в Россию и рост за рубежом <span class="tag">допущения</span></h2>
+    </div>
+    <div class="round">
+      <div class="terms">
+        <div style="color:#9fb0c8;font-size:14px">Предложение стратегическому инвестору</div>
+        <div class="big" style="margin-top:6px">$1,5 млн → 12,5%</div>
+        <dl>
+          <dt>Размер раунда</dt><dd>$3 млн</dd>
+          <dt>Оценка до раунда</dt><dd>$9 млн (pre-money)</dd>
+          <dt>Роль Антиплагиата</dt><dd>Стратегический лид</dd>
+          <dt>Права инвестора</dt><dd>Место в совете директоров, эксклюзивная дистрибуция в РФ и ЕАЭС, право первого предложения (ROFR) в следующем раунде</dd>
+        </dl>
+      </div>
+      <div class="card">
+        <h3>Использование средств</h3>
+        <div class="bar" role="img" aria-label="35% поиск, 25% API, 25% продажи, 15% комплаенс">
+          <div style="flex:35;background:#14213d">35%</div><div style="flex:25;background:#2a7de1">25%</div><div style="flex:25;background:#6aa8ef">25%</div><div style="flex:15;background:#b4530b">15%</div>
+        </div>
+        <div class="legend">
+          <div><i style="background:#14213d"></i>Русскоязычный и мультиязычный поиск</div>
+          <div><i style="background:#2a7de1"></i>API и развёртывание в контуре Антиплагиата в РФ</div>
+          <div><i style="background:#6aa8ef"></i>Продажи в ЕС и США</div>
+          <div><i style="background:#b4530b"></i>Комплаенс и резерв</div>
+        </div>
+        <button class="btn btn-primary js-request" style="margin-top:20px;width:100%">Запросить материалы</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Risks -->
+<section class="blk alt" id="risks">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">Риски и схема их снижения</div>
+      <h2>Базовая схема входа — «лицензия + локальное развёртывание»</h2>
+    </div>
+    <ol class="scheme">
+      <li><b>Юридическая проверка до term sheet</b>Письменные заключения юристов по санкционному праву Норвегии/ЕС и РФ; сделка заключается только в одобренном ими формате.</li>
+      <li><b>Лицензия и развёртывание в РФ</b>Keenious передаёт Антиплагиату лицензию на рекомендательный движок; модель и индекс разворачиваются в дата-центре Антиплагиата в РФ. Индекс собирается из открытой базы OpenAlex<sup class="r"><a href="#s20">20</a></sup> — лицензия CC0 разрешает свободно скачивать и размещать данные у себя<sup class="r"><a href="#s28">28</a></sup>.</li>
+      <li><b>Данные не покидают РФ</b>Аккаунты и тексты работ остаются в России: трансграничной передачи нет, требование о локализации персональных данных (152-ФЗ, с 1 июля 2025 г.; штраф до 6 млн ₽, при повторе — до 18 млн ₽) соблюдено<sup class="r"><a href="#s19">19</a></sup>.</li>
+      <li><b>Санкции</b>Норвегия синхронно вводит санкции ЕС: последний, 21-й пакет вступил в силу 21 октября 2026 г.<sup class="r"><a href="#s30">30</a></sup> Действуют запрет ИТ-консалтинга для юрлиц, учреждённых в РФ<sup class="r"><a href="#s18">18</a></sup>, и запрет поставки отдельных категорий ПО и прав на него — для управления предприятием, промышленного проектирования, нефтегазовой разведки, банковского сектора<sup class="r"><a href="#s31">31</a>,<a href="#s32">32</a></sup>. ПО для научного поиска в эти перечни, по открытым обзорам, не входит — это должен подтвердить юрист. Интеграцию и поддержку в РФ ведёт команда Антиплагиата, Keenious ИТ-услуг юрлицам в РФ не оказывает.</li>
+      <li><b>Расчёты</b>Вузы платят Антиплагиату в рублях в составе лицензии; Keenious получает лицензионное вознаграждение по схеме, согласованной с юристами и банками обеих сторон.</li>
+      <li><b>Транши</b>Деньги в капитал поступают траншами и только при подтверждённой допустимости; если долевое участие невозможно, сделка остаётся лицензионной (роялти + совместная дорожная карта).</li>
+    </ol>
+    <div class="grid g2 risk-other">
+      <div class="card"><h3>Качество на русском языке</h3><p>Лучшие результаты — на английском; для других языков лимит 20 000 знаков на запрос и 10 межъязыковых поисков в день<sup class="r"><a href="#s21">21</a></sup>.</p><p><span class="mit">Мера:</span> 35% раунда — на русскоязычную модель и подключение открытых российских корпусов (КиберЛенинка, лицензии Creative Commons<sup class="r"><a href="#s26">26</a></sup>); второй транш — после достижения согласованной метрики качества.</p></div>
+      <div class="card"><h3>Масштаб компании</h3><p>Выручка ≈ $0,2 млн<sup class="r"><a href="#s2">2</a></sup>, небольшая команда.</p><p><span class="mit">Мера:</span> транши под KPI, вестинг для основателей, место Антиплагиата в совете директоров.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- Team -->
+<section class="blk" id="team">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">Команда и контакты</div>
+      <h2>Основана в 2017 г. в Тромсё<sup class="r"><a href="#s2">2</a></sup>, выросла из Арктического университета Норвегии (UiT)<sup class="r"><a href="#s6">6</a></sup></h2>
+    </div>
+    <div class="team">
+      <div class="person"><div class="ava">FO</div><b>Frode Opdahl</b><span>CEO и CTO, автор рекомендательного движка</span></div>
+      <div class="person"><div class="ava">AR</div><b>Anders Rapp</b><span>COO</span></div>
+      <div class="person"><div class="ava">CH</div><b>Christian Headley</b><span>Head of Customer Success</span></div>
+      <div class="person"><div class="ava">JJ</div><b>Jesper Solheim Johansen</b><span>Head of User Research</span></div>
+      <div class="person"><div class="ava">AM</div><b>Aislinn Marmion</b><span>Business Development &amp; Compliance Lead</span></div>
+    </div>
+    <p class="muted" style="margin-top:14px;font-size:14px">Состав команды — по сайту компании<sup class="r"><a href="#s6">6</a></sup>. Контакты: keenious.com/contact · Keenious AS, Sykehusvegen 23, 9019 Tromsø, Норвегия<sup class="r"><a href="#s2">2</a></sup></p>
+  </div>
+</section>
+
+<section class="cta">
+  <div class="wrap">
+    <h2>Готовы обсудить участие в раунде?</h2>
+    <p>Запросите финансовую модель, техническое описание интеграции и проект term sheet.</p>
+    <button class="btn btn-primary js-request">Запросить материалы</button>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="wrap">
+    <details class="src" id="sources">
+      <summary>Источники (32)</summary>
+      <div class="srclist" id="srclist"></div>
+    </details>
+    <p style="margin-top:18px">Учебный проект по курсу инвестиционного анализа. Не является документом Keenious AS или АО «Антиплагиат»; параметры раунда, рыночные оценки и сценарии интеграции — допущения автора. Факты — из открытых источников, перечисленных выше.</p>
+  </div>
+</footer>
+
+</div><!-- /#app -->
+
+<!-- ================= REQUEST MODAL ================= -->
+<div class="modal" id="modal" hidden role="dialog" aria-modal="true" aria-labelledby="m-title">
+  <div class="box">
+    <h3 id="m-title">Запросить материалы</h3>
+    <p class="muted" style="font-size:14px;margin-top:6px">Финансовая модель, описание интеграции, проект term sheet.</p>
+    <form id="req-form">
+      <label>Имя и фамилия<input name="name" required></label>
+      <label>Организация<input name="org" required value="АО «Антиплагиат»"></label>
+      <label>E-mail<input name="email" type="email" required></label>
+      <label>Что нужно
+        <select name="what"><option>Полный пакет материалов</option><option>Финансовая модель</option><option>Описание интеграции</option><option>Проект term sheet</option></select>
+      </label>
+      <label>Комментарий<textarea name="msg" rows="3"></textarea></label>
+      <div class="row"><button type="button" class="btn btn-light" id="m-close">Закрыть</button><button class="btn btn-primary" type="submit">Отправить запрос</button></div>
+    </form>
+    <div class="done" id="m-done" hidden>Запрос сформирован, но <b>не отправлен</b>: это демонстрационная страница учебного проекта, форма не подключена к почте или CRM.</div>
+  </div>
+</div>
+
+<script>
+/* ---------- sources ---------- */
+const SRC=[
+ ["keenious.com","https://keenious.com/"],
+ ["1881.no — Keenious AS, данные норвежских реестров","https://www.1881.no/data-programvare-og-utvikling/data-programvare-og-utvikling-troms/data-programvare-og-utvikling-tromsoe/keenious-as_106150140S0/"],
+ ["CB Insights — Keenious financials","https://www.cbinsights.com/company/keenious/financials"],
+ ["keenious.com/universities","https://keenious.com/universities"],
+ ["Хабр — исследование «Антиплагиата», 2025","https://habr.com/ru/post/956906/"],
+ ["keenious.com/about","https://keenious.com/about"],
+ ["Keenious — pricing for institutions","https://keenious.notion.site/pricing-for-institutions"],
+ ["AACRAO / UNESCO, 2026","https://www.aacrao.org/edge/emergent-news/global-he-enrolment-reaches-269-million-as-student-mobility-triples/"],
+ ["National Student Clearinghouse, осень 2025","https://nscresearchcenter.org/final-fall-enrollment-trends/"],
+ ["AcademicJobs (данные OECD)","https://www.academicjobs.com/higher-education-news/unesco-he-trends-enrollment-doubles-europe-leads-or-academicjobs-19753"],
+ ["Т—Ж (данные Минобрнауки)","https://t-j.ru/statistic-univercitites/"],
+ ["keenious.com/pricing","https://www.keenious.com/pricing"],
+ ["Блог Elicit — Series A","https://blog.elicit.com/series-a"],
+ ["Блог Consensus — раунд $30 млн","https://consensus.app/home/blog/30m-in-new-funding-to-reach-the-next-10m-researchers/"],
+ ["IT Brief NZ — Litmaps / ResearchRabbit","https://itbrief.co.nz/story/litmaps-acquires-researchrabbit-raises-1-million-for-ai"],
+ ["Sostav — блог Руконтекста","https://www.sostav.ru/blogs/293848"],
+ ["Т—Ж — «Антиплагиат 2.0», 2026","https://t-j.ru/news/antiplagiat2-release/"],
+ ["regjeringen.no — санкции, 8-й пакет ЕС, 2022","https://www.regjeringen.no/en/aktuelt/newsanctions2/id2941995"],
+ ["Stonebridge Legal — локализация данных, 2025","https://www.stonebridgelegal.ru/media/files/Alert_Izmenenie-pravil-lokalizacii-dannyh.pdf"],
+ ["Университет Турку — Keenious и OpenAlex","https://www.utu.fi/en/news/news/keenious-an-artificial-intelligence-based-search-tool-for-a-new-kind-of-information"],
+ ["NMBU — лимиты для неанглоязычных текстов","https://www.nmbu.no/en/node/56377"],
+ ["Мел — «Антиплагиат 2.0», приказ № 636","https://mel.fm/ucheba/vuz/6725318-antiplagiat-20-chto-eto-takoye-kak-on-pomozhet-v-borbe-s-ii-i-plagiatom-v-vkr-i-chto-izmenitsya-dlya"],
+ ["journal-vniispk.ru — поиск в eLIBRARY","https://journal-vniispk.ru/2413-0133/article/download/274909/253880"],
+ ["Tproger — нейросети для курсовых, 2026","https://tproger.ru/articles/luchwie-nejroseti-dlya-kursovoj-raboty--spisok-luchwih-ii-dlya-napisaniya-kursovyh-proektov"],
+ ["vc.ru — нейросети для курсовых, 2026","https://vc.ru/ai/2922843-neyroseti-dlya-kursovyh-rabot"],
+ ["Библиотека ун-та «Дубна» — научные поисковые системы","https://lib.uni-dubna.ru/biblweb/recomends/%D0%9D%D0%B0%D1%83%D1%87%D0%BD%D0%BE_%D0%BF%D0%BE%D0%B8%D1%81%D0%BA%D0%BE%D0%B2%D1%8B%D0%B5%20%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D1%8B_%D0%92%D0%9D%D0%95%D0%A8%D0%9D%D0%98%D0%95%20_%D1%80%D0%BE%D1%81%D1%81%D0%B8%D0%B9%D1%81%D0%BA%D0%B8%D0%B5.pdf"],
+ ["Skillbox Media — олимпиада «Я — профессионал», 2025","https://skillbox.ru/media/education/pochti-v-chetverti-studencheskih-rabot-v-rossii-nashli-priznaki-ii-generacii/"],
+ ["CASRAI — What is OpenAlex (CC0)","https://casrai.org/learn/what-is-openalex"],
+ ["3DNews / РБК — данные «Антиплагиата», 2026","https://3dnews.ru/1145287/"],
+ ["Ukrainska Pravda — Норвегия, 21-й пакет ЕС, 2026","https://www.pravda.com.ua/eng/news/2026/10/20/8058958/"],
+ ["Commersant.ge — 16-й пакет ЕС: ПО, 2025","https://commersant.ge/en/news/economics/eu-adopts-its-16th-package-of-economic-and-individual-measures"],
+ ["Latham & Watkins — санкции ЕС/UK на ПО, 2025","https://www.lw.com/en/insights/2025/08/sanctions-update-eu-and-uk-tighten-restrictions-on-russian-oil-and-provision-of-software-to-russia"]
+];
+document.getElementById('srclist').innerHTML=SRC.map((s,i)=>
+  `<div id="s${i+1}"><span class="n">[${i+1}]</span> <a href="${s[1]}" target="_blank" rel="noopener">${s[0]}</a></div>`).join('');
+// a footnote click opens the sources list
+document.addEventListener('click',e=>{
+  const a=e.target.closest('sup.r a'); if(!a) return;
+  document.getElementById('sources').open=true;
+});
+
+/* ---------- SHA-256 (WebCrypto with pure-JS fallback for non-secure contexts) ---------- */
+function sha256Fallback(str){
+  const bytes=new TextEncoder().encode(str);
+  const K=[0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2];
+  let H=[0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19];
+  const l=bytes.length, nb=((l+9+63)>>6)<<6, m=new Uint8Array(nb);
+  m.set(bytes); m[l]=0x80;
+  const dv=new DataView(m.buffer); dv.setUint32(nb-4,(l*8)>>>0); dv.setUint32(nb-8,Math.floor(l/0x20000000));
+  const w=new Uint32Array(64), r=(x,n)=>(x>>>n)|(x<<(32-n));
+  for(let o=0;o<nb;o+=64){
+    for(let i=0;i<16;i++) w[i]=dv.getUint32(o+i*4);
+    for(let i=16;i<64;i++){const s0=r(w[i-15],7)^r(w[i-15],18)^(w[i-15]>>>3), s1=r(w[i-2],17)^r(w[i-2],19)^(w[i-2]>>>10); w[i]=(w[i-16]+s0+w[i-7]+s1)>>>0;}
+    let [a,b,c,d,e,f,g,h]=H;
+    for(let i=0;i<64;i++){
+      const t1=(h+(r(e,6)^r(e,11)^r(e,25))+((e&f)^(~e&g))+K[i]+w[i])>>>0;
+      const t2=((r(a,2)^r(a,13)^r(a,22))+((a&b)^(a&c)^(b&c)))>>>0;
+      h=g;g=f;f=e;e=(d+t1)>>>0;d=c;c=b;b=a;a=(t1+t2)>>>0;
+    }
+    H=H.map((x,i)=>(x+[a,b,c,d,e,f,g,h][i])>>>0);
+  }
+  return H.map(x=>x.toString(16).padStart(8,'0')).join('');
+}
+async function sha256(str){
+  try{
+    if(window.crypto && crypto.subtle){
+      const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(str));
+      return [...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,'0')).join('');
+    }
+  }catch(e){}
+  return sha256Fallback(str);
+}
+
+/* ---------- gate ---------- */
+// Only the SHA-256 hash of the password is stored here.
+const PASS_HASH='21432b221ac96495309a9472248026da76faffc4717261f28077ad03f8a70903';
+const gate=document.getElementById('gate'), app=document.getElementById('app');
+const form=document.getElementById('gate-form'), pw=document.getElementById('pw'), err=document.getElementById('gate-err');
+let fails=0, lockedUntil=0;
+
+function unlock(){
+  gate.remove(); app.hidden=false;
+  try{sessionStorage.setItem('kn_unlocked',PASS_HASH)}catch(e){}
+  if(location.hash){const t=document.querySelector(location.hash); if(t) t.scrollIntoView();}
+}
+try{ if(sessionStorage.getItem('kn_unlocked')===PASS_HASH) unlock(); }catch(e){}
+
+document.getElementById('toggle').addEventListener('click',e=>{
+  const show=pw.type==='password'; pw.type=show?'text':'password';
+  e.currentTarget.textContent=show?'скрыть':'показать';
+});
+form.addEventListener('submit',async e=>{
+  e.preventDefault();
+  if(Date.now()<lockedUntil){err.textContent=`Слишком много попыток. Подождите ${Math.ceil((lockedUntil-Date.now())/1000)} с.`;return;}
+  const h=await sha256(pw.value.trim());
+  if(h===PASS_HASH){unlock();return;}
+  fails++; pw.value=''; pw.focus();
+  const card=document.getElementById('gate-card'); card.classList.remove('shake'); void card.offsetWidth; card.classList.add('shake');
+  if(fails>=5){lockedUntil=Date.now()+30000;fails=0;err.textContent='Неверный пароль. Повторить можно через 30 секунд.';}
+  else err.textContent='Неверный пароль. Попробуйте ещё раз.';
+});
+
+/* ---------- request modal (demo: nothing is sent) ---------- */
+const modal=document.getElementById('modal'), reqForm=document.getElementById('req-form'), done=document.getElementById('m-done');
+let lastFocus=null;
+function openModal(){lastFocus=document.activeElement;modal.hidden=false;reqForm.hidden=false;done.hidden=true;reqForm.querySelector('input').focus();}
+function closeModal(){modal.hidden=true;if(lastFocus)lastFocus.focus();}
+document.querySelectorAll('.js-request').forEach(b=>b.addEventListener('click',openModal));
+document.getElementById('m-close').addEventListener('click',closeModal);
+modal.addEventListener('click',e=>{if(e.target===modal)closeModal();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!modal.hidden)closeModal();});
+reqForm.addEventListener('submit',e=>{e.preventDefault();reqForm.hidden=true;done.hidden=false;});
+</script>
+</body>
+</html>
